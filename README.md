@@ -3,6 +3,9 @@
 ## MyDiary frontend built with Reactjs.
 Users can create an account or login if they already have one, they can add entries to their diary and can also view and edit entries.
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/c2c8ae3137fd40b0709f/maintainability)](https://codeclimate.com/github/Alameen688/mydiary-spa/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c2c8ae3137fd40b0709f/test_coverage)](https://codeclimate.com/github/Alameen688/mydiary-spa/test_coverage)
+
 + Read the [api documentation](http://mydiaryoxygen.herokuapp.com/api-docs)
 + See the running [application](https://mydiary-spa.netlify.com/)
 
@@ -22,7 +25,6 @@ Users can create an account or login if they already have one, they can add entr
 ## Requirements
 + Node 
 + Git 
-+ Postman
 + Browser (Google Chrome recommended)
 
 *P.S:* See package.json for project dependencies
