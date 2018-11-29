@@ -1,0 +1,4 @@
+export const SIGN_UP_LOADING = 'SIGN_UP_LOADING';
+export const SIGNED_UP = 'SIGNED_UP';
+export const SHOW_SIGNUP_ERROR = 'SHOW_SIGNUP_ERROR';
+export const CLEAR_SIGNUP_ERROR = 'CLEAR_SIGNUP_ERROR';
