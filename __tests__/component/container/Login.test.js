@@ -1,11 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { SignUp } from '../../../src/component/container/SignUp';
-import SignUpPage from '../../../src/component/presentational/SignUp.jsx';
+import { Login } from '../../../src/component/container/Login';
+import LoginView from '../../../src/component/presentational/Login.jsx';
 
-describe('SignUp ', () => {
+describe('Login ', () => {
   const errors = [
-    'Fullname must be at least 6 characters',
     'Password must be at least 8 characters'
   ];
   let props;
@@ -16,26 +15,26 @@ describe('SignUp ', () => {
       history: {
         push: jest.fn()
       },
-      signUp: jest.fn(),
+      login: jest.fn(),
       showError: jest.fn(),
       clearError: jest.fn(),
     };
   });
 
-  it('should signup page without crashing', () => {
-    const wrapper = shallow(<SignUp { ...props } />);
-    expect(wrapper.find(SignUpPage)).toHaveLength(1);
+  it('should render login page without crashing', () => {
+    const wrapper = shallow(<Login { ...props } />);
+    expect(wrapper.find(LoginView)).toHaveLength(1);
   });
 
   it('should handle change events', () => {
-    const changeHandlerSpy = jest.spyOn(SignUp.prototype, 'changeHandler');
+    const changeHandlerSpy = jest.spyOn(Login.prototype, 'changeHandler');
     const event = {
       target: {
         name: 'email',
         value: 'tester@rgtyga.com'
       }
     };
-    const wrapper = shallow(<SignUp { ...props } />);
+    const wrapper = shallow(<Login { ...props } />);
     wrapper.instance().changeHandler(event);
     expect(wrapper.state('email')).toEqual(event.target.value);
     expect(changeHandlerSpy).toHaveBeenCalled();
@@ -43,7 +42,7 @@ describe('SignUp ', () => {
   });
 
   it('should handle change events and clear error if error exists', () => {
-    const changeHandlerSpy = jest.spyOn(SignUp.prototype, 'changeHandler');
+    const changeHandlerSpy = jest.spyOn(Login.prototype, 'changeHandler');
     const event = {
       target: {
         name: 'password',
@@ -51,7 +50,7 @@ describe('SignUp ', () => {
       }
     };
     props.errors = errors;
-    const wrapper = shallow(<SignUp { ...props } />);
+    const wrapper = shallow(<Login { ...props } />);
     wrapper.instance().changeHandler(event);
     expect(wrapper.state('password')).toEqual(event.target.value);
     expect(changeHandlerSpy).toHaveBeenCalled();
@@ -60,41 +59,40 @@ describe('SignUp ', () => {
   });
 
   it('should handle click events and show error if error exists', () => {
-    const clickHandlerSpy = jest.spyOn(SignUp.prototype, 'clickHandler');
+    const clickHandlerSpy = jest.spyOn(Login.prototype, 'clickHandler');
     const event = {
       preventDefault: jest.fn()
     };
-    const wrapper = shallow(<SignUp { ...props } />);
+    const wrapper = shallow(<Login { ...props } />);
     wrapper.setState({
       email: 'tester@egrdfs.com',
-      fullname: '',
-      password: 'testing',
-      confirmPassword: 'testing'
     });
     wrapper.instance().clickHandler(event);
     expect(clickHandlerSpy).toHaveBeenCalled();
     expect(props.showError).toHaveBeenCalled();
-    expect(props.signUp).not.toHaveBeenCalled();
+    expect(props.login).not.toHaveBeenCalled();
     clickHandlerSpy.mockRestore();
   });
 
-  it('should handle click events and call signup method', () => {
-    props.signUp = jest.fn().mockImplementation(() => Promise.resolve(201));
-    const clickHandlerSpy = jest.spyOn(SignUp.prototype, 'clickHandler');
+  it('should handle click events and call login method', () => {
+    props.login = jest.fn().mockImplementation(() => Promise.resolve({
+      response: {
+        token: 'jhregtdyfuio'
+      }
+    }));
+    const clickHandlerSpy = jest.spyOn(Login.prototype, 'clickHandler');
     const event = {
       preventDefault: jest.fn()
     };
-    const wrapper = shallow(<SignUp { ...props } />);
+    const wrapper = shallow(<Login { ...props } />);
     wrapper.setState({
       email: 'tester@egrdfs.com',
-      fullname: 'beta tester',
       password: 'testingtesting',
-      confirmPassword: 'testingtesting'
     });
     wrapper.instance().clickHandler(event);
     expect(wrapper.state('email')).toEqual('tester@egrdfs.com');
     expect(clickHandlerSpy).toHaveBeenCalled();
-    expect(props.signUp).toHaveBeenCalled();
+    expect(props.login).toHaveBeenCalled();
     expect(props.showError).not.toHaveBeenCalled();
     clickHandlerSpy.mockRestore();
   });

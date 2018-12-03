@@ -7,7 +7,7 @@ import {
 } from '../../src/store/constant/auth';
 
 const initialState = { loading: false };
-describe('Comment reducer', () => {
+describe('Signup reducer', () => {
   it('should return the initial state when action type is not handled', () => {
     const action = { type: 'UNHANDLED_ACTION' };
     const state = signUpReducer(undefined, action);

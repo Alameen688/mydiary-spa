@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import SignUp from '../../../src/component/presentational/SignUp.jsx';
 
-describe('LandingPage', () => {
+describe('SignUp', () => {
   it('should render without crashing', () => {
     const props = {
       email: 'tester@ef3rf.co',
@@ -17,5 +17,6 @@ describe('LandingPage', () => {
     };
     const wrapper = shallow(<SignUp { ...props }/>);
     expect(wrapper.exists()).toBeTruthy();
+    expect(wrapper.find('div#error-box')).toBeTruthy();
   });
 });

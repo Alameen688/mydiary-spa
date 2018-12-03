@@ -5,7 +5,9 @@ import HeaderView from '../../../src/component/presentational/Header.jsx';
 
 describe('Header', () => {
   const props = {
-    children: {}
+    children: {},
+    isLoggedIn: false,
+    logout: jest.fn()
   };
   it('should render HeaderContainer without crashing', () => {
     const wrapper = shallow(<Header { ...props } />);
