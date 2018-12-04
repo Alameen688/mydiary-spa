@@ -2,20 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
+import LoginView from '../presentational/Login.jsx';
+import { login, showError, clearError } from '../../store/action/auth/login';
+import { loginConstraint } from '../../utils/constraints/auth';
 import Aux from '../HOC/Aux.jsx';
-import { signUp, showError, clearError } from '../../store/action/auth/signUp';
-import { signUpConstraint } from '../../utils/constraints/auth';
-import SignUpPage from '../presentational/SignUp.jsx';
 import '../../asset/styles/auth.scss';
 
-export class SignUp extends Component {
+export class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      fullname: '',
-      password: '',
-      confirmPassword: ''
+      password: ''
     };
     this.clickHandler = this.clickHandler.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
@@ -32,53 +30,46 @@ export class SignUp extends Component {
 
   clickHandler(event) {
     event.preventDefault();
-    const {
-      email, fullname, password, confirmPassword
-    } = this.state;
+    const { email, password } = this.state;
     const fields = {
       email,
-      fullname,
-      password,
-      confirmPassword
+      password
     };
-    const errors = validate(fields, signUpConstraint);
+    const errors = validate(fields, loginConstraint);
     if (errors) {
       const errorsArray = Object.keys(errors).map(key => errors[key][0]);
       this.props.showError(errorsArray);
     } else {
       const { history } = this.props;
-      this.props.signUp(fields)
-        .then((statusCode) => {
-          if (statusCode && statusCode === 201) {
-            history.push('/login');
+      this.props.login(fields)
+        .then((response) => {
+          if (response.token) {
+            history.push('/entries');
           }
         });
     }
   }
 
   render() {
-    const {
-      email, fullname, password, confirmPassword
-    } = this.state;
+    const { email, password } = this.state;
     const { errors } = this.props;
     return (
       <Aux>
-        <SignUpPage
+        <LoginView
           email={email}
-          fullname={fullname}
           password={password}
-          confirmPassword={confirmPassword}
           onClick={this.clickHandler}
           onChange={this.changeHandler}
-          errors={errors}/>
+          errors={errors}
+        />
       </Aux>
     );
   }
 }
 
-SignUp.propTypes = {
+Login.propTypes = {
   loading: PropTypes.bool.isRequired,
-  signUp: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
   showError: PropTypes.func.isRequired,
   clearError: PropTypes.func.isRequired,
   errors: PropTypes.array,
@@ -87,15 +78,13 @@ SignUp.propTypes = {
 
 const mapStateToProps = state => (
   {
-    loading: state.signUp.loading,
-    errors: state.signUp.errors,
+    loading: state.login.loading,
+    errors: state.login.errors,
   }
 );
 const mapDispatchToProps = {
-  signUp,
+  login,
   showError,
   clearError
 };
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

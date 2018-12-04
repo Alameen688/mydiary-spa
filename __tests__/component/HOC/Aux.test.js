@@ -1,4 +1,4 @@
-import Aux from '../../../src/component/HOC/Aux';
+import Aux from '../../../src/component/HOC/Aux.jsx';
 
 describe('Aux', () => {
   const props = {
