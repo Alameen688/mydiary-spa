@@ -3,6 +3,7 @@
 ## MyDiary frontend built with Reactjs.
 Users can create an account or login if they already have one, they can add entries to their diary and can also view and edit entries.
 
+[![Build Status](https://travis-ci.org/Alameen688/mydiary-spa.svg?branch=staging)](https://travis-ci.org/Alameen688/mydiary-spa)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c2c8ae3137fd40b0709f/maintainability)](https://codeclimate.com/github/Alameen688/mydiary-spa/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c2c8ae3137fd40b0709f/test_coverage)](https://codeclimate.com/github/Alameen688/mydiary-spa/test_coverage)
 
