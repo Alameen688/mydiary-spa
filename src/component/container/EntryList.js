@@ -7,6 +7,7 @@ import { getEntries } from '../../store/action/entry';
 import Aux from '../HOC/Aux.jsx';
 import { formatDate } from '../../utils';
 import HeaderComponent from './Header';
+import addIcon from '../../asset/images/plus.png';
 
 export class EntryList extends Component {
   // eslint-disable-next-line camelcase
@@ -39,7 +40,7 @@ export class EntryList extends Component {
 
           <div id="floating-button">
             <Link to='/entry/new'>
-              <img className="fab-icon" src="../../asset/images/plus.png" />
+              <img className="fab-icon" src={addIcon} />
             </Link>
           </div>
         </main>

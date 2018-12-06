@@ -5,7 +5,6 @@ import Aux from '../HOC/Aux.jsx';
 
 const Header = ({ isLoggedIn, logout, children }) => {
   const links = isLoggedIn ? (<Aux>
-    <Link to='/profile' className="nav-item">Profile</Link>
     <a href="/" className="nav-item" onClick={logout}>Logout</a>
   </Aux>) : (<Aux>
     <Link to='/signup' className="nav-item">Register</Link>

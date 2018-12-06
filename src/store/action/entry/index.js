@@ -11,7 +11,10 @@ import {
   CLEAR_CREATE_RESPONSE,
   SHOW_UPDATE_ERROR,
   CLEAR_UPDATE_ERROR,
-  CLEAR_UPDATE_RESPONSE
+  CLEAR_UPDATE_RESPONSE,
+  SHOW_ENTRIES_ERROR,
+  GET_ENTRY_LOADING,
+  SHOW_ENTRY_ERROR
 } from '../../constant/entry';
 import Axios from '../../../services/axios';
 
@@ -122,8 +125,9 @@ export const updateEntry = (id, entry) => async (dispatch) => {
 /**
  * EntryList actions
  */
-export const showEntriesError = () => ({
-
+export const showEntriesError = errors => ({
+  type: SHOW_ENTRIES_ERROR,
+  errors
 });
 
 export const entriesRetrieved = response => ({
@@ -154,8 +158,9 @@ export const getEntries = () => async (dispatch) => {
  * EntryView actions
  */
 
-export const showEntryError = () => ({
-
+export const showEntryError = errors => ({
+  type: SHOW_ENTRY_ERROR,
+  errors
 });
 
 export const entryRetrieved = response => ({
@@ -164,6 +169,9 @@ export const entryRetrieved = response => ({
 });
 
 export const getEntry = id => async (dispatch) => {
+  dispatch({
+    type: GET_ENTRY_LOADING
+  });
   try {
     const result = await Axios.getEntryById(id);
     const { data, status } = result;
