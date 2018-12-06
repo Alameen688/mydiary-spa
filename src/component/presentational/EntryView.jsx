@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import editIcon from '../../asset/images/edit-icon.png';
 
 const EntryView = ({
   id,
@@ -21,7 +22,7 @@ const EntryView = ({
 
     <div id="floating-button">
       <Link to={`/entry/edit/${id}`}>
-        <img className="fab-icon" src="../../asset/images/edit-icon.png" />
+        <img className="fab-icon" src={editIcon} />
       </Link>
     </div>
   </main>
