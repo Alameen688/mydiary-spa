@@ -28,6 +28,26 @@ class Axios {
   signUp(user) {
     return this.axios.post('/auth/signup', user);
   }
+
+  createEntry(entry) {
+    return this.axios.post('/entries', entry);
+  }
+
+  updateEntry(id, entry) {
+    return this.axios.put(`/entries/${id}`, entry);
+  }
+
+  getEntryById(id) {
+    return this.axios.get(`/entries/${id}`);
+  }
+
+  getEntries() {
+    return this.axios.get('/entries');
+  }
+
+  deleteEntry(id) {
+    return this.axios.delete(`/entries/${id}`);
+  }
 }
 
 export default new Axios();
