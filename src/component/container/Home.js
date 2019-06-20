@@ -1,26 +1,19 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import LandingPage from '../presentational/LandingPage.jsx';
+import { DispatchContext } from '../../store/reducer';
 
-export class Home extends Component {
-  render() {
-    const { isLoggedIn } = this.props;
-    const component = !isLoggedIn ? <LandingPage /> : <Redirect to='/entries' />;
-    return component;
-  }
-}
+export const Home = () => {
+  const { state: { login: { user } } } = useContext(DispatchContext);
+  const isLoggedIn = !!user;
+  const component = !isLoggedIn ? <LandingPage /> : <Redirect to='/entries' />;
+  return component;
+};
 
 Home.propTypes = {
   isLoggedIn: PropTypes.bool,
 };
 
-const mapStateToProps = state => (
-  {
-    isLoggedIn: state.login.user
-  }
-);
 
-
-export default connect(mapStateToProps)(Home);
+export default Home;

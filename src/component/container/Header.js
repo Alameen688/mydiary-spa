@@ -1,29 +1,20 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { DispatchContext } from '../../store/reducer';
 import { logout } from '../../store/action/auth/login';
 import HeaderView from '../presentational/Header.jsx';
 
-export class Header extends Component {
-  render() {
-    const { user, logout: logoutHandler } = this.props;
-    return (
+const Header = ({ children }) => {
+  const { state: { login: { user } }, dispatch } = useContext(DispatchContext);
+  const logoutHandler = () => logout()(dispatch);
+  return (
       <HeaderView isLoggedIn={!!user} logout={logoutHandler}>
-        { this.props.children }
+        { children }
       </HeaderView>
-    );
-  }
-}
+  );
+};
 
 Header.propTypes = {
-  user: PropTypes.object,
-  logout: PropTypes.func.isRequired,
   children: PropTypes.object,
 };
-const mapDispatchToProps = {
-  logout
-};
-const mapStateToProps = state => ({
-  user: state.login.user
-});
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;

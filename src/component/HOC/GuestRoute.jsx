@@ -1,27 +1,24 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Route, Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { DispatchContext } from '../../store/reducer';
 import HeaderComponent from '../container/Header';
 
-export const GuestRoute = ({ isLoggedIn, component: Component, ...rest }) => (
-  <Route
+export const GuestRoute = ({ component: Component, ...rest }) => {
+  const { state: { login: { user } } } = useContext(DispatchContext);
+  const isLoggedIn = !!user;
+  return (<Route
     {...rest}
     render={
       props => (
-        !isLoggedIn ? <React.Fragment><HeaderComponent/><Component {...props} /></React.Fragment> : <Redirect to='/entries' />
+        !isLoggedIn ? <><HeaderComponent/><Component {...props} /></> : <Redirect to='/entries' />
       )
     } />
-);
-
-const mapStateToProps = state => ({
-  isLoggedIn: !!state.login.user
-});
-
+  );
+};
 GuestRoute.propTypes = {
-  isLoggedIn: PropTypes.bool,
   component: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(GuestRoute);
+export default withRouter(GuestRoute);
