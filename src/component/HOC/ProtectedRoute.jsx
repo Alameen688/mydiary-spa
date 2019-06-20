@@ -1,9 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Route, Redirect, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { DispatchContext } from '../../store/reducer';
 
-export const ProtectedRoute = ({ isLoggedIn, component: Component, ...rest }) => (
+export const ProtectedRoute = ({ component: Component, ...rest }) => {
+  const { state: { login: { user } } } = useContext(DispatchContext);
+  const isLoggedIn = !!user;
+  return (
   <Route
     {...rest}
     render={
@@ -11,16 +14,12 @@ export const ProtectedRoute = ({ isLoggedIn, component: Component, ...rest }) =>
         isLoggedIn ? <Component {...props} /> : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
       )
     } />
-);
-
-const mapStateToProps = state => ({
-  isLoggedIn: !!state.login.user
-});
+  );
+};
 
 ProtectedRoute.propTypes = {
-  isLoggedIn: PropTypes.bool.isRequired,
   component: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(ProtectedRoute);
+export default withRouter(ProtectedRoute);
