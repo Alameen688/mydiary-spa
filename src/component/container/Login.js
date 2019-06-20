@@ -1,90 +1,65 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
+import { DispatchContext } from '../../store/reducer';
 import LoginView from '../presentational/Login.jsx';
 import { login, showError, clearError } from '../../store/action/auth/login';
 import { loginConstraint } from '../../utils/constraints/auth';
 import Aux from '../HOC/Aux.jsx';
 import '../../asset/styles/auth.scss';
 
-export class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: ''
-    };
-    this.clickHandler = this.clickHandler.bind(this);
-    this.changeHandler = this.changeHandler.bind(this);
-  }
+const Login = ({ history }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  changeHandler(event) {
-    if (this.props.errors && this.props.errors.length) {
-      this.props.clearError();
+  const { state: { login: { errors } }, dispatch } = useContext(DispatchContext);
+
+  const changeHandler = (event) => {
+    if (errors && errors.length) {
+      clearError()(dispatch);
     }
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
+    if (event.target.name === 'email') {
+      setEmail(event.target.value);
+    } else if (event.target.name === 'password') {
+      setPassword(event.target.value);
+    }
+  };
 
-  clickHandler(event) {
+  const clickHandler = (event) => {
     event.preventDefault();
-    const { email, password } = this.state;
     const fields = {
       email,
       password
     };
-    const errors = validate(fields, loginConstraint);
-    if (errors) {
-      const errorsArray = Object.keys(errors).map(key => errors[key][0]);
-      this.props.showError(errorsArray);
+    const fieldErrors = validate(fields, loginConstraint);
+    if (fieldErrors) {
+      const errorsArray = Object.keys(fieldErrors).map(key => fieldErrors[key][0]);
+      showError(errorsArray)(dispatch);
     } else {
-      const { history } = this.props;
-      this.props.login(fields)
+      login(fields)(dispatch)
         .then((response) => {
           if (response.token) {
             history.push('/entries');
           }
         });
     }
-  }
+  };
 
-  render() {
-    const { email, password } = this.state;
-    const { errors } = this.props;
-    return (
+  return (
       <Aux>
         <LoginView
           email={email}
           password={password}
-          onClick={this.clickHandler}
-          onChange={this.changeHandler}
+          onClick={clickHandler}
+          onChange={changeHandler}
           errors={errors}
         />
       </Aux>
-    );
-  }
-}
+  );
+};
 
 Login.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  login: PropTypes.func.isRequired,
-  showError: PropTypes.func.isRequired,
-  clearError: PropTypes.func.isRequired,
-  errors: PropTypes.array,
   history: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => (
-  {
-    loading: state.login.loading,
-    errors: state.login.errors,
-  }
-);
-const mapDispatchToProps = {
-  login,
-  showError,
-  clearError
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

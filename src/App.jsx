@@ -12,7 +12,7 @@ import HomePage from './component/container/Home';
 import './asset/styles/app.scss';
 import './asset/styles/entry.scss';
 
-const App = () => (
+const Routes = () => (
       <BrowserRouter>
         <Switch>
           <Route exact path='/' component={HomePage} />
@@ -26,4 +26,4 @@ const App = () => (
       </BrowserRouter>
 );
 
-export default App;
+export default Routes;
