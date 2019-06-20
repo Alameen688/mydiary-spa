@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Protected from './component/HOC/ProtectedRoute.jsx';
 import Guest from './component/HOC/GuestRoute.jsx';
@@ -12,9 +12,7 @@ import HomePage from './component/container/Home';
 import './asset/styles/app.scss';
 import './asset/styles/entry.scss';
 
-export default class App extends Component {
-  render() {
-    return (
+const App = () => (
       <BrowserRouter>
         <Switch>
           <Route exact path='/' component={HomePage} />
@@ -26,6 +24,6 @@ export default class App extends Component {
           <Protected path='/entry/:id' component={EntryComponent} />
         </Switch>
       </BrowserRouter>
-    );
-  }
-}
+);
+
+export default App;

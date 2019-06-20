@@ -3,11 +3,11 @@ import {
 } from '../../constant/auth';
 
 
-const initialState = {
+export const initialLogin = {
   loading: false
 };
 
-const login = (state = initialState, action = {}) => {
+export const login = (state = initialLogin, action = {}) => {
   const { type, errors, user } = action;
   switch (type) {
     case LOGIN_LOADING:
@@ -20,7 +20,7 @@ const login = (state = initialState, action = {}) => {
       };
     case LOGOUT:
       return {
-        ...initialState
+        ...initialLogin
       };
     case SHOW_LOGIN_ERROR:
       return {
@@ -36,5 +36,3 @@ const login = (state = initialState, action = {}) => {
       return state;
   }
 };
-
-export default login;

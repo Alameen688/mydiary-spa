@@ -5,11 +5,11 @@ import {
   CLEAR_CREATE_RESPONSE
 } from '../../constant/entry';
 
-const initialState = {
+export const initialCreateEntry = {
   loading: false
 };
 
-export default (state = initialState, action) => {
+export const createEntry = (state = initialCreateEntry, action) => {
   const {
     type,
     errors,

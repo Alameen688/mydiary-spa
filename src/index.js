@@ -1,13 +1,13 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom';
 import App from './App.jsx';
-import store from './store';
+import combinedReducers, { DispatchContext } from './store/reducer';
 
+const [, dispatch] = combinedReducers;
 const app = (
-  <Provider store={store}>
+  <DispatchContext.Provider value={dispatch}>
     <App/>
-  </Provider>
+  </DispatchContext.Provider>
 );
 const container = document.getElementById('root');
 ReactDOM.render(app, container);

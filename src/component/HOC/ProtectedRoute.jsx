@@ -14,7 +14,7 @@ export const ProtectedRoute = ({ isLoggedIn, component: Component, ...rest }) =>
 );
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.login.user
+  isLoggedIn: !!state.login.user
 });
 
 ProtectedRoute.propTypes = {

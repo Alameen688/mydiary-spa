@@ -5,11 +5,11 @@ import {
   SIGNED_UP
 } from '../../constant/auth';
 
-const initialState = {
+export const initialSignUp = {
   loading: false,
 };
 
-const signUp = (state = initialState, action = {}) => {
+export const signUp = (state = initialSignUp, action = {}) => {
   const { type, statusCode, errors } = action;
   switch (type) {
     case SIGN_UP_LOADING:
@@ -35,5 +35,3 @@ const signUp = (state = initialState, action = {}) => {
       return state;
   }
 };
-
-export default signUp;

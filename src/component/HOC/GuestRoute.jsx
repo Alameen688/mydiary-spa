@@ -15,11 +15,11 @@ export const GuestRoute = ({ isLoggedIn, component: Component, ...rest }) => (
 );
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.login.user
+  isLoggedIn: !!state.login.user
 });
 
 GuestRoute.propTypes = {
-  isLoggedIn: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool,
   component: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
 };
