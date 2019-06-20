@@ -5,11 +5,11 @@ import {
   CLEAR_UPDATE_ERROR
 } from '../../constant/entry';
 
-const initialState = {
+export const initialUpdateEntry = {
   loading: false,
 };
 
-export default (state = initialState, action) => {
+export const updateEntry = (state = initialUpdateEntry, action) => {
   const {
     type,
     errors,

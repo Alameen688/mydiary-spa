@@ -1,10 +1,10 @@
 import { GET_ENTRY } from '../../constant/entry';
 
-const initialState = {
+export const initialEntry = {
   entry: {}
 };
 
-export default (state = initialState, action) => {
+export const entry = (state = initialEntry, action) => {
   const { type, response } = action;
   switch (type) {
     case GET_ENTRY:
