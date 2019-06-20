@@ -6,7 +6,8 @@
     "plugin:react/recommended"
   ],
   "plugins": [
-    "react"
+    "react",
+    "react-hooks"
   ],
   "env": {
     "node": true,
@@ -27,7 +28,8 @@
     "id-length": 0,
     "no-unused-vars": [1, {"vars": "local", "args": "none"}],
     "strict": 0,
-    "class-methods-use-this": 0
+    "class-methods-use-this": 0,
+    "react-hooks/rules-of-hooks": "error"
   },
   "overrides": [
     {
