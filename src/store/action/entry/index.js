@@ -115,7 +115,7 @@ export const updateEntry = (id, entry) => async (dispatch) => {
       entryId: editedEntry.id
     };
     dispatch(entryUpdated(response));
-    return status;
+    return { status, entryId: editedEntry.id };
   } catch (error) {
     const errors = deriveError(error);
     dispatch(showUpdateError(errors));
