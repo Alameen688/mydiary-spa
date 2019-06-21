@@ -5,7 +5,6 @@ import { DispatchContext } from '../../store/reducer';
 import LoginView from '../presentational/Login.jsx';
 import { login, showError, clearError } from '../../store/action/auth/login';
 import { loginConstraint } from '../../utils/constraints/auth';
-import Aux from '../HOC/Aux.jsx';
 import '../../asset/styles/auth.scss';
 
 const Login = ({ history }) => {
@@ -46,7 +45,7 @@ const Login = ({ history }) => {
   };
 
   return (
-      <Aux>
+      <>
         <LoginView
           email={email}
           password={password}
@@ -54,7 +53,7 @@ const Login = ({ history }) => {
           onChange={changeHandler}
           errors={errors}
         />
-      </Aux>
+      </>
   );
 };
 

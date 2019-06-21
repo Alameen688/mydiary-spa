@@ -1,15 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Aux from '../HOC/Aux.jsx';
 
 const Header = ({ isLoggedIn, logout, children }) => {
-  const links = isLoggedIn ? (<Aux>
+  const links = isLoggedIn ? (<>
     <a href="/" className="nav-item" onClick={logout}>Logout</a>
-  </Aux>) : (<Aux>
+  </>) : (<>
     <Link to='/signup' className="nav-item">Register</Link>
     <Link to='/login' className="nav-item" id="login">Login</Link>
-  </Aux>);
+  </>);
   return (
     <header>
       <nav>

@@ -1,31 +1,31 @@
-import React, { Component } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import EntryView from '../presentational/EntryView.jsx';
 import { getEntry } from '../../store/action/entry';
-import Aux from '../HOC/Aux.jsx';
 import HeaderComponent from './Header';
 import { formatDate } from '../../utils';
+import { DispatchContext } from '../../store/reducer/index';
 
-export class Entry extends Component {
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount() {
-    const { match } = this.props;
+const Entry = ({ match }) => {
+  const { state, dispatch } = useContext(DispatchContext);
+
+  const { entry: { entry, errors } } = state;
+
+  useEffect(() => {
     const { id } = match.params;
-    this.props.getEntry(id);
-  }
+    getEntry(id)(dispatch);
+  }, [match.params.id]);
 
-  render() {
-    const { entry } = this.props;
-    const {
-      id,
-      title,
-      content,
-      updated_at: date
-    } = entry;
-    const entryDate = date ? formatDate(date) : undefined;
-    return (
-      <Aux>
+  const {
+    id,
+    title,
+    content,
+    updated_at: date
+  } = entry;
+  const entryDate = date ? formatDate(date) : undefined;
+  return (
+      <>
         <HeaderComponent/>
         { Object.keys(entry).length ? <EntryView
           id={id}
@@ -33,24 +33,12 @@ export class Entry extends Component {
           content={content}
           date={entryDate}
         /> : null }
-      </Aux>
-    );
-  }
-}
+      </>
+  );
+};
 
 Entry.propTypes = {
   match: PropTypes.object.isRequired,
-  entry: PropTypes.object.isRequired,
-  getEntry: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  entry: state.entry.entry,
-  errors: state.entry.errors
-});
-
-const mapDispatchToProps = {
-  getEntry
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Entry);
+export default withRouter(Entry);
