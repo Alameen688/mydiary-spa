@@ -2,25 +2,22 @@ import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import EntryListItem from '../presentational/EntryListItem.jsx';
 import { getEntries } from '../../store/action/entry';
-import Aux from '../HOC/Aux.jsx';
 import { formatDate } from '../../utils';
 import HeaderComponent from './Header';
 import addIcon from '../../asset/images/plus.png';
 import { DispatchContext } from '../../store/reducer/index';
 
-export const EntryList = () => {
+const EntryList = () => {
   const { state, dispatch } = useContext(DispatchContext);
 
   const { entries: { entries, errors } } = state;
 
   useEffect(() => {
-    if (!Object.keys(entries).length) {
-      getEntries()(dispatch);
-    }
-  }, [entries]);
+    getEntries()(dispatch);
+  }, [entries.length]);
 
   return (
-      <Aux>
+      <>
         <HeaderComponent />
         <main>
           <div id="grid-box">
@@ -46,7 +43,7 @@ export const EntryList = () => {
             </Link>
           </div>
         </main>
-      </Aux>
+      </>
   );
 };
 

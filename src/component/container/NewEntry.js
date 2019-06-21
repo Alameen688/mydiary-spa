@@ -5,7 +5,6 @@ import validate from 'validate.js';
 import {
   createEntry, showCreateError, clearCreateError, clearCreateResponse
 } from '../../store/action/entry';
-import Aux from '../HOC/Aux.jsx';
 import HeaderComponent from './Header';
 import NewEntryForm from '../presentational/NewEntry.jsx';
 import { createEntryConstraint } from '../../utils/constraints/entry';
@@ -63,7 +62,7 @@ export class NewEntry extends Component {
     const { title, content } = this.state;
     const { errors, message } = this.props;
     return (
-      <Aux>
+      <>
         <HeaderComponent />
         <NewEntryForm
           title={title}
@@ -74,7 +73,7 @@ export class NewEntry extends Component {
           errors={errors}
           message={message}
           />
-      </Aux>
+      </>
     );
   }
 }

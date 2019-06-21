@@ -11,7 +11,6 @@ import {
   clearUpdateError,
   clearUpdateResponse
 } from '../../store/action/entry';
-import Aux from '../HOC/Aux.jsx';
 import HeaderComponent from './Header';
 import { updateEntryConstraint } from '../../utils/constraints/entry';
 
@@ -88,7 +87,7 @@ export class EditEntry extends Component {
     const { entryToEdit, errors, message } = this.props;
     const { title, content } = this.state;
     return (
-      <Aux>
+      <>
         <HeaderComponent />
         { Object.keys(entryToEdit).length ? <EditEntryView
           title={title}
@@ -100,7 +99,7 @@ export class EditEntry extends Component {
           errors={errors}
           message={message}
         /> : null }
-      </Aux>
+      </>
     );
   }
 }
