@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import ReactDOM from 'react-dom';
 import Routes from './App.jsx';
+import { loginSuccessful } from './store/action/auth/login';
 import { login, initialLogin } from './store/reducer/auth/login';
 import { signUp, initialSignUp } from './store/reducer/auth/signUp';
 import { entry, initialEntry } from './store/reducer/entry/entry';
@@ -20,6 +21,13 @@ const App = () => {
   };
   const [state, dispatch] = useCombinedReducer(useReducers);
 
+  const userInfo = localStorage.getItem('mydiaryInfo');
+  useEffect(() => {
+    if (userInfo) {
+      const user = JSON.parse(userInfo);
+      dispatch(loginSuccessful(user));
+    }
+  }, [userInfo]);
   return (<DispatchContext.Provider value={{ state, dispatch }}>
     <Routes/>
 </DispatchContext.Provider>);
