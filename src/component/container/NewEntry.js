@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useContext, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import validate from 'validate.js';
 import {
   createEntry, showCreateError, clearCreateError, clearCreateResponse
@@ -8,98 +8,70 @@ import {
 import HeaderComponent from './Header';
 import NewEntryForm from '../presentational/NewEntry.jsx';
 import { createEntryConstraint } from '../../utils/constraints/entry';
+import { DispatchContext } from '../../store/reducer';
 
-export class NewEntry extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: '',
-      content: ''
-    };
-    this.changeHandler = this.changeHandler.bind(this);
-    this.focusHandler = this.focusHandler.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
-  }
+const initialState = {
+  title: '',
+  content: ''
+};
 
-  changeHandler(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
+const NewEntry = ({ history }) => {
+  const { state, dispatch } = useContext(DispatchContext);
+  const [fields, setFields] = useState(initialState);
 
-  focusHandler() {
-    if (this.props.errors && this.props.errors.length) {
-      this.props.clearCreateError();
+  const { createEntry: { entryId: id, message, errors } } = state;
+  const { title, content } = fields;
+
+  const changeHandler = (event) => {
+    setFields({ ...fields, [event.target.name]: event.target.value });
+  };
+
+  const focusHandler = () => {
+    if (errors && errors.length) {
+      dispatch(clearCreateError());
     }
-  }
+  };
 
-  clickHandler(event) {
+  const clickHandler = (event) => {
     event.preventDefault();
-    const { title, content } = this.state;
-    const fields = {
+    const formFields = {
       title, content
     };
-    const errors = validate(fields, createEntryConstraint);
-    if (errors) {
-      const errorsArray = Object.keys(errors).map(key => errors[key][0]);
-      this.props.showCreateError(errorsArray);
+    const fieldErrors = validate(formFields, createEntryConstraint);
+    if (fieldErrors) {
+      const errorsArray = Object.keys(fieldErrors).map(key => fieldErrors[key][0]);
+      dispatch(showCreateError(errorsArray));
     } else {
-      const { history } = this.props;
-      this.props.createEntry(fields)
-        .then((statusCode) => {
+      createEntry(formFields)(dispatch)
+        .then(({ status: statusCode, entryId }) => {
           if (statusCode && statusCode === 201) {
-            const { entryId } = this.props;
             setTimeout(() => {
-              this.props.clearCreateResponse();
+              dispatch(clearCreateResponse());
               history.push(`/entry/${entryId}`);
             }, 800);
           }
         });
     }
-  }
+  };
 
-  render() {
-    const { title, content } = this.state;
-    const { errors, message } = this.props;
-    return (
+  return (
       <>
         <HeaderComponent />
         <NewEntryForm
           title={title}
           content={content}
-          onChange={this.changeHandler}
-          onFocus={this.focusHandler}
-          onClick={this.clickHandler}
+          onChange={changeHandler}
+          onFocus={focusHandler}
+          onClick={clickHandler}
           errors={errors}
           message={message}
           />
       </>
-    );
-  }
-}
+  );
+};
 
 NewEntry.propTypes = {
-  errors: PropTypes.array,
-  message: PropTypes.string,
-  entryId: PropTypes.number,
   history: PropTypes.object.isRequired,
-  showCreateError: PropTypes.func.isRequired,
-  clearCreateError: PropTypes.func.isRequired,
-  createEntry: PropTypes.func.isRequired,
-  clearCreateResponse: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  message: state.createEntry.message,
-  errors: state.createEntry.errors,
-  entryId: state.createEntry.entryId
-});
-
-const mapDispatchToProps = {
-  createEntry,
-  showCreateError,
-  clearCreateError,
-  clearCreateResponse
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(NewEntry);
+export default withRouter(NewEntry);
