@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import EntryListItem from '../presentational/EntryListItem.jsx';
 import { getEntries } from '../../store/action/entry';
@@ -8,16 +6,20 @@ import Aux from '../HOC/Aux.jsx';
 import { formatDate } from '../../utils';
 import HeaderComponent from './Header';
 import addIcon from '../../asset/images/plus.png';
+import { DispatchContext } from '../../store/reducer/index';
 
-export class EntryList extends Component {
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount() {
-    this.props.getEntries();
-  }
+export const EntryList = () => {
+  const { state, dispatch } = useContext(DispatchContext);
 
-  render() {
-    const { entries } = this.props;
-    return (
+  const { entries: { entries, errors } } = state;
+
+  useEffect(() => {
+    if (!Object.keys(entries).length) {
+      getEntries()(dispatch);
+    }
+  }, [entries]);
+
+  return (
       <Aux>
         <HeaderComponent />
         <main>
@@ -45,23 +47,7 @@ export class EntryList extends Component {
           </div>
         </main>
       </Aux>
-    );
-  }
-}
-
-EntryList.propTypes = {
-  entries: PropTypes.array.isRequired,
-  errors: PropTypes.array,
-  getEntries: PropTypes.func.isRequired,
+  );
 };
 
-const mapStateToProps = state => ({
-  entries: state.entries.entries,
-  errors: state.entries.errors
-});
-
-const mapDispatchToProps = {
-  getEntries
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EntryList);
+export default EntryList;
