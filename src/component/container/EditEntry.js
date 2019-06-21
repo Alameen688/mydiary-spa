@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import validate from 'validate.js';
 
 import EditEntryView from '../presentational/EditEntry.jsx';
@@ -13,124 +13,90 @@ import {
 } from '../../store/action/entry';
 import HeaderComponent from './Header';
 import { updateEntryConstraint } from '../../utils/constraints/entry';
+import { DispatchContext } from '../../store/reducer/index';
 
-export class EditEntry extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: '',
-      content: ''
-    };
-    this.changeHandler = this.changeHandler.bind(this);
-    this.focusHandler = this.focusHandler.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
-  }
+const initialState = {
+  title: '',
+  content: ''
+};
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount() {
-    const { match } = this.props;
+const EditEntry = ({ match, history }) => {
+  const { state, dispatch } = useContext(DispatchContext);
+  const [fields, setFields] = useState(initialState);
+
+  const { entry: { entry: entryToEdit }, updateEntry: { message, errors } } = state;
+  const { title, content } = fields;
+
+  const setFormValue = () => {
+    const { title: entryTitle, content: entryContent } = entryToEdit;
+    setFields({
+      title: entryTitle,
+      content: entryContent,
+    });
+  };
+
+  useEffect(() => {
     const { id } = match.params;
-    this.props.getEntry(id);
-  }
+    getEntry(id)(dispatch);
+    setFormValue();
+  }, [match.params.id || entryToEdit]);
 
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { entryToEdit } = nextProps;
-    if (entryToEdit && this.props.entryToEdit !== entryToEdit) {
-      const { title, content } = entryToEdit;
-      this.setState({
-        title,
-        content
-      });
-    }
-  }
-
-  changeHandler(event) {
-    this.setState({
+  const changeHandler = (event) => {
+    setFields({
+      ...fields,
       [event.target.name]: event.target.value
     });
-  }
+  };
 
-  focusHandler() {
-    if (this.props.errors && this.props.errors.length) {
-      this.props.clearUpdateError();
+  const focusHandler = () => {
+    if (errors && errors.length) {
+      dispatch(clearUpdateError());
     }
-  }
+  };
 
-  clickHandler(event) {
+  const clickHandler = (event) => {
     event.preventDefault();
-    const { title, content } = this.state;
-    const fields = {
+    const filterFields = {
       title, content
     };
-    const errors = validate(fields, updateEntryConstraint);
-    if (errors) {
-      const errorsArray = Object.keys(errors).map(key => errors[key][0]);
-      this.props.showUpdateError(errorsArray);
+    const fieldErrors = validate(filterFields, updateEntryConstraint);
+    if (fieldErrors) {
+      const errorsArray = Object.keys(fieldErrors).map(key => fieldErrors[key][0]);
+      dispatch(showUpdateError(errorsArray));
     } else {
-      const { match, history } = this.props;
       const { id } = match.params;
-      this.props.updateEntry(id, fields)
-        .then((statusCode) => {
+      updateEntry(id, filterFields)(dispatch)
+        .then(({ status: statusCode, entryId }) => {
           if (statusCode && statusCode === 200) {
-            const { entryId } = this.props;
             setTimeout(() => {
-              this.props.clearUpdateResponse();
+              dispatch(clearUpdateResponse());
               history.push(`/entry/${entryId}`);
             }, 800);
           }
         });
     }
-  }
+  };
 
-  render() {
-    const { entryToEdit, errors, message } = this.props;
-    const { title, content } = this.state;
-    return (
+  return (
       <>
         <HeaderComponent />
         { Object.keys(entryToEdit).length ? <EditEntryView
           title={title}
           content={content}
-          onChange={this.changeHandler}
-          onFocus={this.focusHandler}
+          onChange={changeHandler}
+          onFocus={focusHandler}
           loading={false}
-          onClick={this.clickHandler}
+          onClick={clickHandler}
           errors={errors}
           message={message}
         /> : null }
       </>
-    );
-  }
-}
+  );
+};
 
 EditEntry.propTypes = {
-  errors: PropTypes.array,
-  message: PropTypes.string,
-  entryId: PropTypes.number,
   match: PropTypes.object.isRequired,
-  entryToEdit: PropTypes.object.isRequired,
-  getEntry: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  showUpdateError: PropTypes.func.isRequired,
-  clearUpdateError: PropTypes.func.isRequired,
-  updateEntry: PropTypes.func.isRequired,
-  clearUpdateResponse: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  entryToEdit: state.entry.entry,
-  message: state.updateEntry.message,
-  errors: state.updateEntry.errors,
-  entryId: state.updateEntry.entryId
-});
-
-const mapDispatchToProps = {
-  getEntry,
-  updateEntry,
-  showUpdateError,
-  clearUpdateError,
-  clearUpdateResponse
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditEntry);
+export default withRouter(EditEntry);
