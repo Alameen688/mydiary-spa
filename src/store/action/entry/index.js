@@ -70,7 +70,7 @@ export const createEntry = entry => async (dispatch) => {
       entryId: newEntry.id
     };
     dispatch(entryCreated(response));
-    return status;
+    return { status, entryId: newEntry.id };
   } catch (error) {
     const errors = deriveError(error);
     dispatch(showCreateError(errors));
